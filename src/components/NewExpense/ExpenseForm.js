@@ -8,6 +8,8 @@ const ExpenseForm = (props) => {
         date: '',
     });
 
+    const [visible, setVisibility] = useState(props.visible);
+
     const titleChangeHandler = (event) => {
         setUserInput((previousState) => {
             return { ...previousState, title: event.target.value };
@@ -41,29 +43,45 @@ const ExpenseForm = (props) => {
                 date: '',
             };
         });
+        setVisibility(false);
     };
 
-    return (
-        <form onSubmit={saveChangesHandler}>
-            <div className="new-expense__controls">
-                <div className="new-expense__control">
-                    <label>Title</label>
-                    <input type="text" value={userInput.title} onChange={titleChangeHandler} />
+    const onCancelClick = () => {
+        setVisibility(false);
+    };
+
+    const addNewExpenseClickHandler = () => {
+        setVisibility(true);
+    };
+
+    if (visible) {
+        return (
+            <form onSubmit={saveChangesHandler}>
+                <div className="new-expense__controls">
+                    <div className="new-expense__control">
+                        <label>Title</label>
+                        <input type="text" value={userInput.title} onChange={titleChangeHandler} />
+                    </div>
+                    <div className="new-expense__control">
+                        <label>Amount</label>
+                        <input type="number" min="0.01" step="0.01" value={userInput.amount} onChange={amountChangeHandler} />
+                    </div>
+                    <div className="new-expense__control">
+                        <label>Date</label>
+                        <input type="date" min="2023-01-01" max="2023-12-31" value={userInput.date} onChange={dateChangeHandler} />
+                    </div>
                 </div>
-                <div className="new-expense__control">
-                    <label>Amount</label>
-                    <input type="number" min="0.01" step="0.01" value={userInput.amount} onChange={amountChangeHandler} />
+                <div className="new-expense__actions">
+                    <button onClick={onCancelClick}>Cancel</button>
+                    <button type="submit">Add Expense</button>
                 </div>
-                <div className="new-expense__control">
-                    <label>Date</label>
-                    <input type="date" min="2023-01-01" max="2023-12-31" value={userInput.date} onChange={dateChangeHandler} />
-                </div>
-            </div>
-            <div className="new-expense__actions">
-                <button type="submit">Add Expense</button>
-            </div>
-        </form>
-    );
+            </form>
+        );
+    } else {
+        return (
+            <button onClick={addNewExpenseClickHandler}>Add New Expense</button>
+        );
+    }
 };
 
 export default ExpenseForm;
